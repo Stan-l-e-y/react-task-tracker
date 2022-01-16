@@ -1,34 +1,67 @@
 import Header from './components/Header';
 import Tasks from './components/Tasks';
-import { useState } from 'react';
+import AddTask from './components/AddTask';
+import { useState, useEffect } from 'react';
 
 function App() {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      text: 'Doc app',
-      dat: 'Feb 5th at 2:30pm',
-      reminder: true,
-    },
-    {
-      id: 2,
-      text: 'Meeting',
-      dat: 'Feb 2th at 5:30pm',
-      reminder: true,
-    },
-    {
-      id: 3,
-      text: 'Foop Shopping',
-      dat: 'Feb 10th at 1:30pm',
-      reminder: false,
-    },
-  ]);
+  const [showAddTask, setShowAddTask] = useState(false);
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const getTasks = async () => {
+      const tasksFromServer = await fetchTasks();
+      setTasks(tasksFromServer);
+    };
+    getTasks();
+  }, []);
+
+  //Fetch Tasks
+  const fetchTasks = async () => {
+    const res = await fetch('http://localhost:5000/tasks');
+    const data = await res.json();
+
+    return data;
+  };
+
+  //Add Task
+  const addTask = (task) => {
+    const id = Math.floor(Math.random() * 10000) + 1;
+
+    const newTask = { id, ...task };
+
+    setTasks([...tasks, newTask]);
+  };
+
+  //Delete Task
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  //Toggle reminder
+  const toggleReminder = (id) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, reminder: !task.reminder } : task
+      )
+    );
+  };
 
   return (
     <div className="container">
-      <Header></Header>
-      <Tasks tasks={tasks}></Tasks>
-      <h1>Hello From React</h1>
+      <Header
+        onAdd={() => setShowAddTask(!showAddTask)}
+        showAdd={showAddTask}
+      ></Header>
+      {showAddTask && <AddTask onAdd={addTask}></AddTask>}
+      {tasks.length > 0 ? (
+        <Tasks
+          onDelete={deleteTask}
+          tasks={tasks}
+          onToggle={toggleReminder}
+        ></Tasks>
+      ) : (
+        'No Tasks yet :('
+      )}
     </div>
   );
 }
