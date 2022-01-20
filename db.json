@@ -1,12 +1,6 @@
 {
   "tasks": [
     {
-      "id": 1,
-      "text": "Doc app",
-      "day": "Feb 5th at 2:30pm",
-      "reminder": true
-    },
-    {
       "id": 2,
       "text": "Meeting",
       "day": "Feb 2th at 5:30pm",
@@ -17,6 +11,18 @@
       "text": "Foop Shopping",
       "day": "Feb 10th at 1:30pm",
       "reminder": false
+    },
+    {
+      "text": "wweded",
+      "day": "ww",
+      "reminder": false,
+      "id": 4
+    },
+    {
+      "text": "hey",
+      "day": "",
+      "reminder": false,
+      "id": 5
     }
   ]
 }
